@@ -1,6 +1,6 @@
 import { prismaClient } from "@/app/lib/db";
 import NextAuth from "next-auth"
-import Google from "next-auth/providers/google";
+// import Google from "next-auth/providers/google";
 import GoogleProvider from "next-auth/providers/google";
 
 
@@ -27,6 +27,7 @@ callbacks: {
           provider: "Google"
         }
       })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
 
     }

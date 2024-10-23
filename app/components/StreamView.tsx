@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FiShare2 } from "react-icons/fi";
+// import { FiShare2 } from "react-icons/fi";
 import Appbar from "./Appbar";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -91,6 +91,7 @@ export default function StreamView({
     );
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleShare = () => {
     if (navigator.share) {
       navigator

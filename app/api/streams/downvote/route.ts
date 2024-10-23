@@ -1,6 +1,7 @@
 import { prismaClient } from "@/app/lib/db";
 import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Stream } from "stream";
 import { z } from "zod"
 
@@ -45,6 +46,7 @@ export async function POST(req: NextResponse) {
         message: "Done!"
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch(e){
         return NextResponse.json({
             message: "Error while upvoting"

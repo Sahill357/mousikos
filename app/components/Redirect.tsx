@@ -13,6 +13,6 @@ export default function Redirect (){
        router.push("/dashboard")
 
         }
-    },[session])
+    },[router, session])
     return null
 }
