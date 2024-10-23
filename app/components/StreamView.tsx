@@ -65,7 +65,6 @@ export default function StreamView({
         dislikes: 0,
         thumbnail: `https://img.youtube.com/vi/${videoId}/0.jpg`,
         videoId,
-        haveUpvoted: false,
       };
       setQueue([...queue, newSong]);
       setVideoLink("");
@@ -81,8 +80,10 @@ export default function StreamView({
             ? {
                 ...video,
                 likes: isLike ? video.likes + 1 : video.likes,
-                dislikes: !isLike ? video.dislikes + 1 : video.dislikes,
-                haveUpvoted: isLike,
+                dislikes: !isLike
+                  ? video.dislikes + 1
+                  : video.dislikes - 1,
+                haveUpvoted: !video.haveUpvoted,
               }
             : video
         )
@@ -116,93 +117,49 @@ export default function StreamView({
     <div className="flex flex-col min-h-screen bg-gray-900 text-gray-100">
       <Appbar />
       <div className="container mx-auto p-4 space-y-6 flex-grow">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold">Song Voting Queue</h1>
-          <button
-            onClick={handleShare}
-            className="flex items-center p-2 bg-purple-600 hover:bg-purple-700 rounded text-gray-100"
-          >
-            <FiShare2 className="h-6 w-6 mr-2" /> Share
-          </button>
-        </div>
-        
-        {/* Add flexbox layout for two columns */}
-        <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
-          {/* Left side: Add a Song */}
-          <section className="w-full md:w-1/3 space-y-4">
-            <h2 className="text-2xl font-semibold mb-2">Add a Song</h2>
-            <form onSubmit={handleSubmit} className="space-y-2">
-              <input
-                type="text"
-                placeholder="Paste YouTube video link here"
-                value={videoLink}
-                onChange={(e) => {
-                  setVideoLink(e.target.value);
-                  const videoId = extractVideoId(e.target.value);
-                  setPreviewVideoId(videoId || "");
-                }}
-                className="w-full p-2 bg-gray-800 text-gray-100 border border-gray-700 rounded"
-              />
-              <button
-                type="submit"
-                className="w-full p-2 bg-purple-600 hover:bg-purple-700 rounded"
-              >
-                Add to Queue
-              </button>
-            </form>
-            {previewVideoId && (
-              <div className="mt-2 aspect-video">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src={`https://www.youtube.com/embed/${previewVideoId}`}
-                  title="YouTube video preview"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              </div>
-            )}
+        {/* Main flexbox container */}
+        <div className="flex space-x-6">
+          {/* Left side: Add a Song section */}
+          <section className="w-1/3 space-y-4">
+            <div>
+              <h2 className="text-2xl font-semibold mb-2">Add a Song</h2>
+              <form onSubmit={handleSubmit} className="space-y-2">
+                <input
+                  type="text"
+                  placeholder="Paste YouTube video link here"
+                  value={videoLink}
+                  onChange={(e) => {
+                    setVideoLink(e.target.value);
+                    const videoId = extractVideoId(e.target.value);
+                    setPreviewVideoId(videoId || "");
+                  }}
+                  className="w-full p-2 bg-gray-800 text-gray-100 border border-gray-700 rounded"
+                />
+                <button
+                  type="submit"
+                  className="w-full p-2 bg-purple-600 hover:bg-purple-700 rounded"
+                >
+                  Add to Queue
+                </button>
+              </form>
+              {previewVideoId && (
+                <div className="mt-2 aspect-video">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={`https://www.youtube.com/embed/${previewVideoId}`}
+                    title="YouTube video preview"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              )}
+            </div>
           </section>
 
-          {/* Right side: Upcoming Songs + Now Playing */}
-          <section className="w-full md:w-2/3 space-y-6">
-            {/* Upcoming Songs */}
-            <div>
-              <h2 className="text-2xl font-semibold mb-2">Upcoming Songs</h2>
-              <div className="space-y-2">
-                {queue.map((video) => (
-                  <div
-                    key={video.id}
-                    className="bg-gray-800 border border-gray-700 rounded p-4 flex items-center space-x-4"
-                  >
-                    <img
-                      src={video.thumbnail}
-                      alt="video thumbnail"
-                      className="w-24 h-18 object-cover rounded"
-                    />
-                    <div className="flex-grow">
-                      <h3 className="font-semibold">{video.title}</h3>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button
-                        size="sm"
-                        onClick={() => handleVote(video.id, !video.haveUpvoted)}
-                        className="flex items-center space-x-1 p-2 border border-gray-600 rounded hover:bg-gray-700"
-                      >
-                        {video.haveUpvoted ? (
-                          <ChevronDown className="h-4 w-4" />
-                        ) : (
-                          <ChevronUp className="h-4 w-4" />
-                        )}
-                        <span>{video.likes}</span>
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
+          {/* Right side: Upcoming Songs and Now Playing sections */}
+          <section className="w-2/3 space-y-4">
             {/* Now Playing */}
             <div>
               <h2 className="text-2xl font-semibold mb-2">Now Playing</h2>
@@ -224,6 +181,47 @@ export default function StreamView({
                 >
                   Play Next
                 </button>
+              </div>
+            </div>
+
+            {/* Upcoming Songs */}
+            <div>
+              <h2 className="text-2xl font-semibold mb-2">Upcoming Songs</h2>
+              <div className="space-y-2">
+                {queue.map((video) => (
+                  <div
+                    key={video.id}
+                    className="bg-gray-800 border border-gray-700 rounded p-4 flex items-center space-x-4"
+                  >
+                    <img
+                      src={video.thumbnail}
+                      alt="video thumbnail"
+                      className="w-24 h-18 object-cover rounded"
+                    />
+                    <div className="flex-grow">
+                      <h3 className="font-semibold">{video.title}</h3>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button
+                        size="sm"
+                        onClick={() =>
+                          handleVote(
+                            video.id,
+                            video.haveUpvoted ? false : true
+                          )
+                        }
+                        className="flex items-center space-x-1 p-2 border border-gray-600 rounded hover:bg-gray-700"
+                      >
+                        {video.haveUpvoted ? (
+                          <ChevronDown className="h-4 w-4" />
+                        ) : (
+                          <ChevronUp className="h-4 w-4" />
+                        )}
+                        <span>{video.likes}</span>
+                      </Button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </section>
