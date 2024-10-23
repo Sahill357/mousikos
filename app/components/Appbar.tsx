@@ -11,7 +11,7 @@ export default function Appbar() {
   const session = useSession();
 
   return (
-    <div className="flex justify-between items-center p-4" style={{ backgroundColor: '#111827' }}>
+    <div className="flex justify-between items-center p-4 ml-7 mr-7 mt-2" style={{ backgroundColor: '#111827' }}>
       {/* Left Side: Logo */}
       <Link className="flex items-center" href="#">
         <Music className="h-6 w-6 mr-2 text-purple-400" />
