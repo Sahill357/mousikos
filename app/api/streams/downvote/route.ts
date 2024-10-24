@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
             message: "Done!",
         });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
         return NextResponse.json(
             { message: "Error while upvoting" },
